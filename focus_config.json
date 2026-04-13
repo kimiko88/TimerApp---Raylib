@@ -1,0 +1,38 @@
+{
+    "activities": [
+        {
+            "autoLaunchPath": "",
+            "category": "Work",
+            "customSoundPath": "",
+            "id": 1776097875,
+            "initialSeconds": 1500,
+            "sound": "",
+            "title": "piopsf",
+            "totalTime": 0
+        }
+    ],
+    "autoPlay": true,
+    "bpm": 60,
+    "categories": [
+        "Work",
+        "Workout",
+        "prova"
+    ],
+    "eyeSafeEnabled": false,
+    "eyeSafeRemainingSeconds": 7200.0,
+    "hideCategoryInMinimalist": false,
+    "isDarkMode": false,
+    "isInEyeSafeBreak": false,
+    "isMetronomePlaying": false,
+    "isMinimalist": false,
+    "notificationsEnabled": false,
+    "queue": [],
+    "routines": [],
+    "selectedSound": "ding",
+    "selectedTheme": "Dracula",
+    "showMetronome": false,
+    "theme": "",
+    "totalFocusMinutes": 0,
+    "usePulseAnimation": true,
+    "useTransparency": false
+}
