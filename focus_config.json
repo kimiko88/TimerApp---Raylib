@@ -1,38 +1,115 @@
 {
-    "activities": [
-        {
-            "autoLaunchPath": "",
-            "category": "Work",
-            "customSoundPath": "",
-            "id": 1776097875,
-            "initialSeconds": 1500,
-            "sound": "",
-            "title": "piopsf",
-            "totalTime": 0
-        }
-    ],
+    "activities": [],
     "autoPlay": true,
     "bpm": 60,
     "categories": [
         "Work",
+        "Study",
         "Workout",
-        "prova"
+        "Other",
+        "fsafsdg",
+        "vbfg",
+        "dfgdf"
     ],
-    "eyeSafeEnabled": false,
-    "eyeSafeRemainingSeconds": 7200.0,
+    "currentFocusActivityID": -1,
+    "currentFocusRemainingSeconds": 0,
+    "eyeSafeEnabled": true,
+    "eyeSafeRemainingSeconds": 5672.42236328125,
     "hideCategoryInMinimalist": false,
     "isDarkMode": false,
     "isInEyeSafeBreak": false,
     "isMetronomePlaying": false,
     "isMinimalist": false,
     "notificationsEnabled": false,
-    "queue": [],
+    "queue": [
+        {
+            "autoLaunchPath": "",
+            "category": "Work",
+            "customSoundPath": "",
+            "id": 0,
+            "initialSeconds": 1500,
+            "sound": "",
+            "title": "Work (Pomo)",
+            "totalTime": 0
+        },
+        {
+            "autoLaunchPath": "",
+            "category": "Work",
+            "customSoundPath": "",
+            "id": 0,
+            "initialSeconds": 1500,
+            "sound": "",
+            "title": "Work (Pomo)",
+            "totalTime": 0
+        },
+        {
+            "autoLaunchPath": "",
+            "category": "Study",
+            "customSoundPath": "",
+            "id": 0,
+            "initialSeconds": 300,
+            "sound": "",
+            "title": "Short Break",
+            "totalTime": 0
+        },
+        {
+            "autoLaunchPath": "",
+            "category": "Study",
+            "customSoundPath": "",
+            "id": 0,
+            "initialSeconds": 300,
+            "sound": "",
+            "title": "Short Break",
+            "totalTime": 0
+        },
+        {
+            "autoLaunchPath": "",
+            "category": "Work",
+            "customSoundPath": "",
+            "id": 0,
+            "initialSeconds": 1500,
+            "sound": "",
+            "title": "Work (Pomo)",
+            "totalTime": 0
+        },
+        {
+            "autoLaunchPath": "",
+            "category": "Study",
+            "customSoundPath": "",
+            "id": 0,
+            "initialSeconds": 300,
+            "sound": "",
+            "title": "Short Break",
+            "totalTime": 0
+        },
+        {
+            "autoLaunchPath": "",
+            "category": "Work",
+            "customSoundPath": "",
+            "id": 0,
+            "initialSeconds": 1500,
+            "sound": "",
+            "title": "Work (Pomo)",
+            "totalTime": 0
+        },
+        {
+            "autoLaunchPath": "",
+            "category": "Study",
+            "customSoundPath": "",
+            "id": 0,
+            "initialSeconds": 900,
+            "sound": "",
+            "title": "Long Break",
+            "totalTime": 0
+        }
+    ],
     "routines": [],
     "selectedSound": "ding",
-    "selectedTheme": "Dracula",
+    "selectedTheme": "Solarized",
     "showMetronome": false,
     "theme": "",
     "totalFocusMinutes": 0,
     "usePulseAnimation": true,
+    "useTransitions": false,
     "useTransparency": false
 }

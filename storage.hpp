@@ -52,9 +52,10 @@ struct Config {
     std::vector<std::string> categories;
     int currentFocusRemainingSeconds = 0;
     long currentFocusActivityID = -1;
+    bool useTransitions = true;
 
     // JSON serialization
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Config, isDarkMode, theme, selectedSound, notificationsEnabled, activities, queue, routines, bpm, autoPlay, isMinimalist, hideCategoryInMinimalist, usePulseAnimation, useTransparency, showMetronome, isMetronomePlaying, selectedTheme, totalFocusMinutes, eyeSafeEnabled, eyeSafeRemainingSeconds, isInEyeSafeBreak, categories, currentFocusRemainingSeconds, currentFocusActivityID)
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Config, isDarkMode, theme, selectedSound, notificationsEnabled, activities, queue, routines, bpm, autoPlay, isMinimalist, hideCategoryInMinimalist, usePulseAnimation, useTransparency, showMetronome, isMetronomePlaying, selectedTheme, totalFocusMinutes, eyeSafeEnabled, eyeSafeRemainingSeconds, isInEyeSafeBreak, categories, currentFocusRemainingSeconds, currentFocusActivityID, useTransitions)
 };
 
 class Storage {
