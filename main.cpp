@@ -88,6 +88,9 @@ float pulseTime = 0.0f;
 double lastMetronomeTick = 0;
 int selectedThemeIdx = 0;
 float catScrollOffset = 0.0f;
+float routineEditScrollOffset = 0.0f;
+float routineActScrollOffset = 0.0f;
+float queueScrollOffset = 0.0f;
 float viewAlpha = 0.0f;
 bool isTransitioning = false;
 
@@ -468,6 +471,8 @@ int main() {
       }
       if (GuiButton({105, 8, 25, 25}, "#117#")) {
         isMiniMode = false;
+        SetWindowMinSize(SCREEN_WIDTH, 200);
+        SetWindowMaxSize(SCREEN_WIDTH, 2000);
         SetWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         ClearWindowState(FLAG_WINDOW_TOPMOST | FLAG_WINDOW_UNDECORATED);
       }
@@ -491,6 +496,8 @@ int main() {
       }
       if (GuiButton({SCREEN_WIDTH - 155, 20, 40, 30}, "#118#")) {
         isMiniMode = true;
+        SetWindowMinSize(140, 45);
+        SetWindowMaxSize(140, 45);
         SetWindowSize(140, 45);
         SetWindowState(FLAG_WINDOW_TOPMOST | FLAG_WINDOW_UNDECORATED);
       }
@@ -693,9 +700,25 @@ int main() {
                         {40, (float)qy + 15}, 18, 1, t.text);
           qy += 70;
         }
-        for (int i = 0; i < (int)config.queue.size(); i++) {
+        int maxVisQueue = 6;
+        int qCount = (int)config.queue.size();
+        float maxQScroll = (qCount > maxVisQueue) ? (float)(qCount - maxVisQueue) : 0.0f;
+        float listAreaY = qy;
+        if (CheckCollisionPointRec(GetMousePosition(), {25, listAreaY, 400, (float)(maxVisQueue * 60)})) {
+          queueScrollOffset -= GetMouseWheelMove();
+        }
+        if (queueScrollOffset < 0) queueScrollOffset = 0;
+        if (queueScrollOffset > maxQScroll) queueScrollOffset = maxQScroll;
+        if (qCount > maxVisQueue) {
+          float scrollbarVal = queueScrollOffset;
+          scrollbarVal = GuiScrollBar({430, listAreaY, 15, (float)(maxVisQueue * 60)}, (int)scrollbarVal, 0, (int)maxQScroll);
+          queueScrollOffset = scrollbarVal;
+        }
+
+        int startQIdx = (int)queueScrollOffset;
+        for (int i = startQIdx; i < startQIdx + maxVisQueue && i < (int)config.queue.size(); i++) {
           DrawRectangleRounded({25, (float)qy, 400, 50}, 0.2, 8, t.surface);
-          DrawSharpText(mainFont, config.queue[i].title.c_str(),
+          DrawSharpText(mainFont, TextFormat("%d. %s", i + 1, config.queue[i].title.c_str()),
                         {40, (float)qy + 15}, 18, 1, t.text);
           if (i > 0 && GuiButton({275, (float)qy + 10, 30, 30}, "#117#")) {
             std::swap(config.queue[i], config.queue[i - 1]);
@@ -712,8 +735,6 @@ int main() {
             i--;
           }
           qy += 60;
-          if (qy > SCREEN_HEIGHT - 65)
-            break;
         }
       } else if (showRoutines) {
         if (editingRoutineIdx == -2) {
@@ -723,6 +744,8 @@ int main() {
             tempRoutine = Routine();
             tempRoutine.name = "My New Block";
             strcpy(tempRoutineName, tempRoutine.name.c_str());
+            routineEditScrollOffset = 0;
+            routineActScrollOffset = 0;
           }
           if (GuiButton({140, 105, 140, 35}, "#121# POMODORO")) {
             Activity work = {0, "Work (Pomo)", "Work", 25 * 60};
@@ -764,6 +787,8 @@ int main() {
               editingRoutineIdx = i;
               tempRoutine = config.routines[i];
               strcpy(tempRoutineName, tempRoutine.name.c_str());
+              routineEditScrollOffset = 0;
+              routineActScrollOffset = 0;
             }
             if (GuiButton({355, (float)ry + 10, 35, 30}, "#143#")) {
               config.routines.erase(config.routines.begin() + i);
@@ -788,10 +813,25 @@ int main() {
             Storage::saveConfig(config);
             editingRoutineIdx = -2;
           }
+          int maxVisItems = 4;
+          int itemCount = (int)tempRoutine.items.size();
+          float maxItemsScroll = (itemCount > maxVisItems) ? (float)(itemCount - maxVisItems) : 0.0f;
+          if (CheckCollisionPointRec(GetMousePosition(), {25, 220, 400, (float)(maxVisItems * 50)})) {
+            routineEditScrollOffset -= GetMouseWheelMove();
+          }
+          if (routineEditScrollOffset < 0) routineEditScrollOffset = 0;
+          if (routineEditScrollOffset > maxItemsScroll) routineEditScrollOffset = maxItemsScroll;
+          if (itemCount > maxVisItems) {
+            float scrollbarVal = routineEditScrollOffset;
+            scrollbarVal = GuiScrollBar({430, 220, 15, (float)(maxVisItems * 50)}, (int)scrollbarVal, 0, (int)maxItemsScroll);
+            routineEditScrollOffset = scrollbarVal;
+          }
+
+          int startItemIdx = (int)routineEditScrollOffset;
           int by = 220;
-          for (int i = 0; i < (int)tempRoutine.items.size(); i++) {
+          for (int i = startItemIdx; i < startItemIdx + maxVisItems && i < itemCount; i++) {
             DrawRectangleRounded({25, (float)by, 400, 45}, 0.2, 8, t.surface);
-            DrawSharpText(mainFont, tempRoutine.items[i].title.c_str(),
+            DrawSharpText(mainFont, TextFormat("%d. %s", i + 1, tempRoutine.items[i].title.c_str()),
                           {40, (float)by + 12}, 16, 1, t.text);
             if (i > 0 && GuiButton({275, (float)by + 7, 30, 30}, "#114#"))
               std::swap(tempRoutine.items[i], tempRoutine.items[i - 1]);
@@ -803,19 +843,31 @@ int main() {
               i--;
             }
             by += 50;
-            if (by > 400)
-              break;
           }
+          
+          int maxVisActs = 4;
+          int actCount = (int)config.activities.size();
+          float maxActsScroll = (actCount > maxVisActs) ? (float)(actCount - maxVisActs) : 0.0f;
+          if (CheckCollisionPointRec(GetMousePosition(), {25, 450, 400, (float)(maxVisActs * 45)})) {
+            routineActScrollOffset -= GetMouseWheelMove();
+          }
+          if (routineActScrollOffset < 0) routineActScrollOffset = 0;
+          if (routineActScrollOffset > maxActsScroll) routineActScrollOffset = maxActsScroll;
+          if (actCount > maxVisActs) {
+            float scrollbarVal = routineActScrollOffset;
+            scrollbarVal = GuiScrollBar({430, 450, 15, (float)(maxVisActs * 45)}, (int)scrollbarVal, 0, (int)maxActsScroll);
+            routineActScrollOffset = scrollbarVal;
+          }
+
+          int startActIdx = (int)routineActScrollOffset;
           int ly = 450;
-          for (int i = 0; i < (int)config.activities.size(); i++) {
+          for (int i = startActIdx; i < startActIdx + maxVisActs && i < actCount; i++) {
             DrawRectangleRounded({25, (float)ly, 400, 40}, 0.2, 8, t.surface);
             DrawSharpText(mainFont, config.activities[i].title.c_str(),
                           {40, (float)ly + 10}, 14, 1, t.text);
             if (GuiButton({355, (float)ly + 5, 35, 30}, "#08#"))
               tempRoutine.items.push_back(config.activities[i]);
             ly += 45;
-            if (ly > SCREEN_HEIGHT - 50)
-              break;
           }
         }
       } else if (showActivities) {
@@ -1006,10 +1058,36 @@ int main() {
               OpenExternal(currentActivity->autoLaunchPath.c_str());
           }
         }
-        if (GuiButton({175, 510, 100, 30}, "RESET"))
+        if (GuiButton({120, 510, 95, 30}, "RESET"))
           timer.reset();
-        if (GuiButton({25, 570, SCREEN_WIDTH - 50, 40}, "SELECT ACTIVITY")) {
+        if (GuiButton({235, 510, 95, 30}, "SKIP")) {
+          if (!config.queue.empty()) {
+            ProcessNextInQueue();
+          } else {
+            timer.reset();
+            timer.pause();
+            currentActivity = nullptr;
+          }
+        }
+
+        int qy = 545;
+        if (currentActivity) {
+          DrawSharpText(mainFont, TextFormat("NOW: %s", currentActivity->title.c_str()), {25, (float)qy}, 16, 1, t.accent);
+          qy += 22;
+        }
+        for (int i = 0; i < (int)config.queue.size() && i < 2; i++) {
+          DrawSharpText(mainFont, TextFormat("NEXT %d: %s", i + 1, config.queue[i].title.c_str()), {25, (float)qy}, 14, 1, t.subtext);
+          qy += 20;
+        }
+        if (config.queue.size() > 2) {
+          DrawSharpText(mainFont, TextFormat("+ %d more", (int)config.queue.size() - 2), {25, (float)qy}, 14, 1, t.subtext);
+        }
+
+        if (GuiButton({25, 630, 195, 40}, "ACTIVITY")) {
           showActivities = true;
+        }
+        if (GuiButton({230, 630, 195, 40}, "ROUTINE")) {
+          showRoutines = true;
         }
       }
     }
